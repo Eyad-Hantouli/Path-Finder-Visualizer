@@ -1,10 +1,5 @@
 import PriorityQueue from "../data structures/PriorityQueue";
 
-function manhattanDistance(point1, point2) {
-    const distance = Math.abs(point1.row - point2.row) + Math.abs(point1.col - point2.col);
-    return distance;
-}
-
 function euclideanDistance(point1, point2) {
     const dx = point1.row - point2.row;
     const dy = point1.col - point2.col;
@@ -36,10 +31,12 @@ export function greedyBestFirstSearch(startNode, finishNode, ROWS, COLUMNS, hand
     
     const priorityQueue = new PriorityQueue();
     const parents = new Map();
+    const gScore = {}; // New object to store the cost to reach each node
 
     priorityQueue.push([startNode, 0]); // Initialize the priority queue with the start node and a cost of 0
 
     parents.set(`${startNode.row}-${startNode.col}`, null);
+    gScore[`${startNode.row}-${startNode.col}`] = 0; // The cost to reach the start node is 0
 
     const isBlock = (id) => {
         return document.getElementById(id).classList.contains("block") || document.getElementById(id).classList.contains("maze-wall");
@@ -86,11 +83,14 @@ export function greedyBestFirstSearch(startNode, finishNode, ROWS, COLUMNS, hand
 
                     if (newNode.row >= 0 && newNode.row < ROWS && newNode.col >= 0 && newNode.col < COLUMNS && !visited[newNode.row][newNode.col] && !isBlock(`${newNode.row}-${newNode.col}`)) {
                         const newCost = getWeightedValue(`${node.row}-${node.col}`); // Assume a cost of 1 to move to a neighboring node
-                        
-                        const fScore = newCost + euclideanDistance(newNode, finishNode); // fScore is the sum of the cost to reach the node and the heuristic cost
-                        priorityQueue.push([newNode, fScore]);
-                        parents.set(`${newNode.row}-${newNode.col}`, `${node.row}-${node.col}`);
-                        visited[newNode.row][newNode.col] = true;
+
+                        if (!gScore[`${newNode.row}-${newNode.col}`] || newCost < gScore[`${newNode.row}-${newNode.col}`]) {
+                            gScore[`${newNode.row}-${newNode.col}`] = newCost;
+                            const fScore = newCost + euclideanDistance(newNode, finishNode); // fScore is the sum of the cost to reach the node and the heuristic cost
+                            priorityQueue.push([newNode, fScore]);
+                            parents.set(`${newNode.row}-${newNode.col}`, `${node.row}-${node.col}`);
+                            // visited[newNode.row][newNode.col] = true;
+                        }
                     }
                 }
 

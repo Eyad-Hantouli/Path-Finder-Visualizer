@@ -1,10 +1,5 @@
 import PriorityQueue from "../data structures/PriorityQueue";
 
-function manhattanDistance(point1, point2) {
-    const distance = Math.abs(point1.row - point2.row) + Math.abs(point1.col - point2.col);
-    return distance;
-}
-
 function euclideanDistance(point1, point2) {
     const dx = point1.row - point2.row;
     const dy = point1.col - point2.col;

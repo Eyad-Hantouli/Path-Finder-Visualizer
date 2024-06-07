@@ -181,7 +181,7 @@ table {
   position: absolute;
   width: 0px;
   aspect-ratio: 1/1;
-  background-color: white;
+  /* background-color: white; */
   border: 1px solid white;
   top: 50%;
   left: 50%;
@@ -201,7 +201,8 @@ table {
 
 @keyframes poppingShortestPath {
   25% {
-    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(255, 255, 255); */
+    background-color: rgb(255, 180, 41);
   }
   50% {
     background-color: rgb(255, 234, 41);
