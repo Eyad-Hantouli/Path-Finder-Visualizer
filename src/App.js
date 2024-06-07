@@ -41,7 +41,7 @@ function App() {
     const newWidth = window.innerWidth;
     setWidth(newWidth);
     if (newWidth < 1080) {
-      // alert("For a better experience, please use a screen with a width of at least 1080px.\nWork is underway to support different screen sizes.\n\nThanks for visiting our website :).");
+      alert("For a better experience, please use a screen with a width of at least 1080px.\nWork is underway to support different screen sizes.\n\nThanks for visiting our website :).");
     }
     
   };
