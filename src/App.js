@@ -25,6 +25,9 @@ function App() {
   const [weightPick, setWeightPick] = useState(false);
   const [eraserPick, setEraserPick] = useState(false);
   const [showWidthAlert, setShowWidthAlert] = useState(false);
+
+  const [invalidRows, setInvalidRows] = useState(false);
+  const [invalidColumns, setInvalidColumns] = useState(false);
   
   const [shortestPath, setShortestPath] = useState("--");
   const [totalWeight, setTotalWeight] = useState("--");
@@ -51,8 +54,13 @@ function App() {
   };
 
   const handleEditRows = (e) => {
-    const value = e.target.value;
-    if (value < MIN_ROWS || value > MAX_ROWS) return;
+    let value = e.target.value;
+
+    setInvalidRows(value < MIN_ROWS || value > MAX_ROWS);
+
+    value = Math.max(value, MIN_ROWS);
+    value = Math.min(value, MAX_ROWS);
+    
     setRows(Math.max(5, Math.min(59, value)));
 
     setStartNode(curr => (
@@ -72,8 +80,13 @@ function App() {
   }
 
   const handleEditColumns = (e) => {
-    const value = e.target.value;
-    if (value < MIN_COLUMNS || value > MAX_COLUMNS) return;
+    let value = e.target.value;
+
+    setInvalidColumns(value < MIN_COLUMNS || value > MAX_COLUMNS);
+
+    value = Math.max(value, MIN_COLUMNS);
+    value = Math.min(value, MAX_COLUMNS);
+
     setColumns(Math.max(5, Math.min(61, value)));
 
     setStartNode(curr => (
@@ -272,8 +285,10 @@ function App() {
 
           <div>
             <b>Grid Size: 
-              <input type="number" defaultValue={ROWS} onChange={handleEditRows}></input>
-              <input type="number" defaultValue={COLUMNS} onChange={handleEditColumns}></input>
+              <input type="number" className={`${invalidRows ? "invalid-input" : <></>}`} 
+              defaultValue={ROWS} onChange={handleEditRows}></input>
+              <input type="number" className={`${invalidColumns ? "invalid-input" : <></>}`}
+              defaultValue={COLUMNS} onChange={handleEditColumns}></input>
             </b>
           </div>
         </div>

@@ -490,3 +490,10 @@ border: 1px solid rgba(12, 53, 71, 0.15);
   padding: 10px 20px;
   font-weight: 500;
 }
+
+.invalid-input,
+.invalid-input:focus {
+  border: 2px solid red;
+  color: red;
+  outline: none;
+}
