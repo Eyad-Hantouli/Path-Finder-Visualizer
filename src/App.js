@@ -8,6 +8,7 @@ import { generateMaze } from "./maze functions/generateMaze";
 import { greedyBestFirstSearch } from "./algorithms/greedyBestFirstSearch";
 import { aStar } from "./algorithms/aStar";
 import { dijkstra } from "./algorithms/dijkstra";
+import Alert from "./Alert";
 
 function App() {
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -19,46 +20,96 @@ function App() {
   const [finishNode, setFinishNode] = useState({row: 9, col: 50, source: "s0"});
   const [update, setUpdate] = useState(false);
   const [reset, setReset] = useState(false);
-
+  
   const [pencilPick, setPicilPick] = useState(false);
   const [weightPick, setWeightPick] = useState(false);
   const [eraserPick, setEraserPick] = useState(false);
-
+  const [showWidthAlert, setShowWidthAlert] = useState(false);
+  
   const [shortestPath, setShortestPath] = useState("--");
   const [totalWeight, setTotalWeight] = useState("--");
+  
+  const MIN_ROWS = 5;
+  const MAX_ROWS = 61;
+
+  const MIN_COLUMNS = 5;
+  const MAX_COLUMNS = 61;
 
   const BASE_CLASS_NAME = "grid-item weighted-0";
-  const ROWS = 20;
-  const COLUMNS = 61;
+  const [ROWS, setRows] = useState(20);
+  const [COLUMNS, setColumns] = useState(61);
   let visited = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(false));
 
   let prev = null;
 
-  const [width, setWidth] = useState(window.innerWidth);
-  const [alerted, setAlerted] = useState(false)
-
   const checkWidth = () => {
-    const newWidth = window.innerWidth;
-    setWidth(newWidth);
-    if (newWidth < 1080) {
-      alert("For a better experience, please use a screen with a width of at least 1080px.\nWork is underway to support different screen sizes.\n\nThanks for visiting our website :).");
+    // window.innerWidth < 1080 && 
+    if (!localStorage.getItem("widthAlert")) {
+        setShowWidthAlert(true);
     }
     
   };
 
+  const handleEditRows = (e) => {
+    const value = e.target.value;
+    if (value < MIN_ROWS || value > MAX_ROWS) return;
+    setRows(Math.max(5, Math.min(59, value)));
+
+    setStartNode(curr => (
+      {
+        row: parseInt(value / 2),
+        col: 2,
+        source: curr.source
+      }
+    ));
+    setFinishNode(curr => (
+      {
+        row: parseInt(value / 2),
+        col: COLUMNS-2,
+        source: curr.source
+      }
+    ));
+  }
+
+  const handleEditColumns = (e) => {
+    const value = e.target.value;
+    if (value < MIN_COLUMNS || value > MAX_COLUMNS) return;
+    setColumns(Math.max(5, Math.min(61, value)));
+
+    setStartNode(curr => (
+      {
+        row: parseInt(ROWS / 2),
+        col: 2,
+        source: curr.source
+      }
+    ));
+    setFinishNode(curr => (
+      {
+        row: parseInt(ROWS / 2),
+        col: value-2,
+        source: curr.source
+      }
+    ));
+  }
+
+  const handleBeforeUnload = (e) => {
+    localStorage.removeItem("widthAlert");
+    // e.preventDefault(); 
+    e.returnValue = ''; 
+  }
+
   useEffect(() => {
-    if (!alerted) {
-      setAlerted(true);
-      window.addEventListener('resize', checkWidth);
-      // Check the width on initial render
-      checkWidth();
+    window.addEventListener('resize', checkWidth);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
+    // Check the width on initial render
+    checkWidth();
 
-      // Clean up the event listener on component unmount
-      return () => {
-        window.removeEventListener('resize', checkWidth);
-      };
-    }
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', checkWidth);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
 
@@ -170,6 +221,7 @@ function App() {
   }
 
   return (<div className="App">
+  <Alert showWidthAlert={showWidthAlert} setShowWidthAlert={setShowWidthAlert} />
     <div className="controller-holder">
       <div className="controller container">
         <button onClick={run}>Run <i class="fa-solid fa-play"></i></button>
@@ -191,7 +243,6 @@ function App() {
       </div>
     </div>
     <div className="info container">
-    <div></div>
       { algorithm == Algorithms.DIJKSTRA &&
         <p>Dijkstra's Algorithm is <strong><i>weighted</i></strong> and <strong><i>guarantee</i></strong> the shortest path!</p>
       }
@@ -213,9 +264,18 @@ function App() {
       
       <div className="details">
         <div className="bottom-line-holder">
-          <b>Shortest path details</b>
-          <b>Length: {shortestPath}</b>
-          <b>Total weight: {totalWeight}</b>
+          <div>
+            <b>Shortest path details</b>
+            <b>Length: {shortestPath}</b>
+            <b>Total weight: {totalWeight}</b>
+          </div>
+
+          <div>
+            <b>Grid Size: 
+              <input type="number" defaultValue={ROWS} onChange={handleEditRows}></input>
+              <input type="number" defaultValue={COLUMNS} onChange={handleEditColumns}></input>
+            </b>
+          </div>
         </div>
       </div>
     </div>

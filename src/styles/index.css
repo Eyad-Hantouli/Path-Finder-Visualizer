@@ -18,6 +18,11 @@ code {
     monospace;
 }
 
+input {
+  user-select: text;
+  display: inline;
+}
+
 table, td, th {
   border: 1px solid #afd8f8;
 }
@@ -245,10 +250,9 @@ table {
 }
 
 .App {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
 }
 
 .clicked {
@@ -385,13 +389,17 @@ table {
   justify-content: space-around;
 }
 
+.info p, .info strong, .info i, .info b {
+  user-select: text;
+}
+
 .info p {
   text-align: center;
   font-size: 20px;
+  margin: 30px auto;
 }
 
 .info .details {
-  max-width: 500px;
   opacity: .5;
 }
 
@@ -399,4 +407,86 @@ table {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.info .bottom-line-holder div:first-child {
+  flex-grow: 1;
+}
+.info .bottom-line-holder div:last-child input {
+  margin-left: 5px;
+  width: 60px;
+  text-align: center;
+}
+.info .bottom-line-holder div {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 500px;
+  justify-content: space-between;
+}
+
+
+.alert-background {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  opacity: .8;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.alert-holder {
+  position: fixed;
+  width: 100%;
+  max-height: 100vh;
+  overflow: auto;
+  top: 50%;
+  left: 50%;
+  max-width: 600px;
+  padding: 50px;
+  z-index: 1500;
+  background-color: #0c3547;
+  /* From https://css.glass */
+background: rgba(12, 53, 71, 0.72);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(6.5px);
+-webkit-backdrop-filter: blur(6.5px);
+border: 1px solid rgba(12, 53, 71, 0.15);
+  color: white;
+  user-select: text;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+}
+
+.alert-holder * {
+  user-select: text;
+}
+
+.alert-holder p {
+  font-size: 18px;
+}
+
+.alert-button-holder {
+  display: flex;
+  justify-content: end;
+  margin-top: 50px;
+}
+
+.alert-button-holder button {
+  user-select: none;
+  outline: none;
+  border: none;
+  background-color: #afd8f8;
+  color: #0c3547;
+  padding: 10px 20px;
+  font-weight: 500;
 }
